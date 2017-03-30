@@ -149,6 +149,7 @@ function init(){
         var chartOpt = {
           chart: {
             type: 'bar',
+            zoomType: 'xy',
             renderTo: $container.find('.chart-bar-container')[0],
             events: {
               load: function(){
@@ -178,7 +179,7 @@ function init(){
             min: 0,
             title: {
               text: data.x_axix_title,
-              enabled: data.x_axix_title
+              enabled: data.x_axix_title !== ''
             },
             labels: {
               enabled: false
@@ -197,7 +198,7 @@ function init(){
             useHTML: true
           },
           plotOptions: {
-            column: {
+            bar: {
               pointPadding: 0.2,
               borderWidth: 0
             }
