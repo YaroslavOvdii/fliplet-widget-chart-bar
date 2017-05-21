@@ -1,12 +1,12 @@
 {
-  "name": "Bar Chart",
+  "name": "Chart: Bar",
   "package": "com.fliplet.chart.bar",
   "version": "1.0.0",
   "icon": "img/icon.png",
   "tags": ["type:component", "category:charts"],
   "provider_only": false,
   "references": [
-    "dataSourceId:dataSource"
+    "dataSourceQuery.dataSourceId:dataSource"
   ],
   "html_tag": "div",
   "interface": {
