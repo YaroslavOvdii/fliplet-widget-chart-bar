@@ -80,72 +80,76 @@
           data.totalEntries = 6;
           return Promise.resolve()
         }
-        return Fliplet.DataSources.fetchWithOptions(data.dataSourceQuery).then(function(result){
-          data.entries = [];
-          data.columns = [];
-          data.values = [];
-          data.totalEntries = 0;
-          if (!result.dataSource.columns.length) {
-            return Promise.resolve();
-          }
-          switch (data.dataSourceQuery.selectedModeIdx) {
-            case 0:
-            default:
-              // Plot the data as is
-              data.name = data.dataSourceQuery.columns.value;
-              result.dataSourceEntries.forEach(function(row, i) {
-                if (!row[data.dataSourceQuery.columns.category] && !row[data.dataSourceQuery.columns.value]) {
-                  return;
-                }
-                data.columns.push(row[data.dataSourceQuery.columns.category] || 'Category ' + (i+1));
-                data.values.push(parseInt(row[data.dataSourceQuery.columns.value]) || 0);
-                data.totalEntries++;
-              });
-              break;
-            case 1:
-              // Summarise data
-              data.name = 'Count of ' + data.dataSourceQuery.columns.column;
-                result.dataSourceEntries.forEach(function(row) {
-                  var value = row[data.dataSourceQuery.columns.column];
-
-                  if (Array.isArray(value)) {
-                    // Value is an array
-                    value.forEach(function(elem) {
-                      if (typeof elem === 'string') {
-                        ele = $.trim(elem);
-                      }
-                      data.entries.push(elem);
-                      if ( data.columns.indexOf(elem) === -1 ) {
-                        data.columns.push(elem);
-                        data.values[data.columns.indexOf(elem)] = 1;
-                      } else {
-                        data.values[data.columns.indexOf(elem)]++;
-                      }
-                    });
-                  } else {
-                    // Value is not an array
-                    if (typeof value === 'string') {
-                      value = $.trim(value);
-                    }
-                    data.entries.push(value);
-                    if ( data.columns.indexOf(value) === -1 ) {
-                      data.columns.push(value);
-                      data.values[data.columns.indexOf(value)] = 1;
-                    } else {
-                      data.values[data.columns.indexOf(value)]++;
-                    }
+        
+        return Fliplet.Hooks.run('beforeQueryChart', data.dataSourceQuery).then(function() {
+          return Fliplet.DataSources.fetchWithOptions(data.dataSourceQuery)
+        }).then(function(result){
+          return Fliplet.Hooks.run('afterQueryChart', result).then(function() {
+            data.entries = [];
+            data.columns = [];
+            data.values = [];
+            data.totalEntries = 0;
+            if (!result.dataSource.columns.length) {
+              return Promise.resolve();
+            }
+            switch (data.dataSourceQuery.selectedModeIdx) {
+              case 0:
+              default:
+                // Plot the data as is
+                data.name = data.dataSourceQuery.columns.value;
+                result.dataSourceEntries.forEach(function(row, i) {
+                  if (!row[data.dataSourceQuery.columns.category] && !row[data.dataSourceQuery.columns.value]) {
+                    return;
                   }
+                  data.columns.push(row[data.dataSourceQuery.columns.category] || 'Category ' + (i+1));
+                  data.values.push(parseInt(row[data.dataSourceQuery.columns.value]) || 0);
+                  data.totalEntries++;
                 });
-                sortData();
-                // SAVES THE TOTAL NUMBER OF ROW/ENTRIES
-                data.totalEntries = data.entries.length;
                 break;
-          }
+              case 1:
+                // Summarise data
+                data.name = 'Count of ' + data.dataSourceQuery.columns.column;
+                  result.dataSourceEntries.forEach(function(row) {
+                    var value = row[data.dataSourceQuery.columns.column];
 
-          return Promise.resolve();
-        }).catch(function(error){
-          return Promise.reject(error);
-        });
+                    if (Array.isArray(value)) {
+                      // Value is an array
+                      value.forEach(function(elem) {
+                        if (typeof elem === 'string') {
+                          ele = $.trim(elem);
+                        }
+                        data.entries.push(elem);
+                        if ( data.columns.indexOf(elem) === -1 ) {
+                          data.columns.push(elem);
+                          data.values[data.columns.indexOf(elem)] = 1;
+                        } else {
+                          data.values[data.columns.indexOf(elem)]++;
+                        }
+                      });
+                    } else {
+                      // Value is not an array
+                      if (typeof value === 'string') {
+                        value = $.trim(value);
+                      }
+                      data.entries.push(value);
+                      if ( data.columns.indexOf(value) === -1 ) {
+                        data.columns.push(value);
+                        data.values[data.columns.indexOf(value)] = 1;
+                      } else {
+                        data.values[data.columns.indexOf(value)]++;
+                      }
+                    }
+                  });
+                  sortData();
+                  // SAVES THE TOTAL NUMBER OF ROW/ENTRIES
+                  data.totalEntries = data.entries.length;
+                  break;
+            }
+
+            return Promise.resolve();
+          }).catch(function(error){
+            return Promise.reject(error);
+          });
       }
 
       function refreshChartInfo() {
