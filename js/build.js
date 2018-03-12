@@ -150,6 +150,7 @@
           }).catch(function(error){
             return Promise.reject(error);
           });
+        })
       }
 
       function refreshChartInfo() {
@@ -267,14 +268,14 @@
                 Fliplet.Analytics.trackEvent({
                   category: 'chart',
                   action: 'data_point_interact',
-                  title: 'bar'
+                  label: 'bar'
                 });
               },
               legendItemClick: function () {
                 Fliplet.Analytics.trackEvent({
                   category: 'chart',
                   action: 'legend_filter',
-                  title: 'bar'
+                  label: 'bar'
                 });
               }
             }
