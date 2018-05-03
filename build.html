@@ -1,6 +1,7 @@
 <div class="chart-bar-wrapper" data-chart-bar-id="{{id}}">
   {{#if dataSourceQuery.dataSourceId}}
-    <div class="chart-container"></div>
+    <div class="chart-container"{{#if chartHeight}} style="height: {{chartHeight}};"{{/if}}></div>
+    {{#or showTotalEntries autoRefresh}}
     <div class="container-fluid">
       <div class="row">
         {{#if showTotalEntries}}
@@ -15,10 +16,11 @@
         {{/if}}
       </div>
     </div>
+    {{/or}}
   {{else}}
     <div class="text-center text-muted">
       <div class="chart-placeholder">
-        <div class="chart-container"></div>
+        <div class="chart-container"{{#if chartHeight}} style="height: {{chartHeight}};"{{/if}}></div>
         <div class="chart-placeholder-text">
           <h3>Bar Chart</h3>
           <p>Start configuring your component and the chart will appear here.</p>

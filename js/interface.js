@@ -1,12 +1,15 @@
-var data = Fliplet.Widget.getData() || {
+var defaultChartHeight = '400px';
+var defaultData = {
   dataSourceQuery: undefined,
-  showDataLegend: undefined,
-  showDataValues: undefined,
+  chartHeight: defaultChartHeight,
+  showDataLegend: true,
+  showDataValues: true,
   yAxisTitle: '',
   xAxisTitle: '',
-  showTotalEntries: undefined,
-  autoRefresh: undefined
+  showTotalEntries: false,
+  autoRefresh: false
 };
+var data = $.extend(defaultData, Fliplet.Widget.getData());
 
 var dsQueryData = {
   settings: {
@@ -30,7 +33,7 @@ var dsQueryData = {
         ]
       },
       {
-        label: 'Summarise my data',
+        label: 'Summarize my data',
         filters: false,
         columns: [
           {
@@ -66,12 +69,39 @@ var dsQueryProvider = Fliplet.Widget.open('com.fliplet.data-source-query', {
   }
 });
 
+// Ensure chart heights have a correct default & units
+function validateChartHeight(val) {
+  if (typeof val !== 'string') {
+    val = val.toString() || '';
+  }
+
+  if (!val || parseFloat(val) <= 0) {
+    // Set empty or non-empty values to the default
+    val = defaultChartHeight;
+  }
+
+  if (/^\d+$/.test(val)) {
+    // Value contains only numbers
+    val = val + 'px';
+  }
+
+  return val;
+}
+
+function validateForm() {
+  // Validate chart height
+  $('#chart_height').val(validateChartHeight($('#chart_height').val()));
+}
+
 dsQueryProvider.then(function(result){
+  validateForm();
+  
   Fliplet.Widget.save({
     // dataSourceId: parseInt($dataSource.val(), 10),
     // dataSourceColumn: $dataColumns.val(),
     dataSourceQuery: result.data,
     dataSortOrder: $dataSortOrder.find(':selected').val(),
+    chartHeight: $('#chart_height').val(),
     showDataLegend: $('#show_data_legend:checked').val() === "show",
     showDataValues: $('#show_data_values:checked').val() === "show",
     yAxisTitle: $('#y_axis_title').val(),
@@ -91,6 +121,7 @@ Fliplet.Widget.onSaveRequest(function () {
 
 // LOAD CHART SETTINGS
 if (data) {
+  $('#chart_height').val(data.chartHeight);
   $('#show_data_legend').prop('checked', data.showDataLegend);
   $('#show_data_values').prop('checked', data.showDataValues);
   $('#y_axis_title').val(data.yAxisTitle);
