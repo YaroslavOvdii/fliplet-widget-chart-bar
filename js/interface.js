@@ -126,7 +126,7 @@ function attachObservers() {
   });
 
   $('#separate_chart_heights').on('change', function () {
-    $('.chart-heights')[$(this).is(':checked') ? 'addClass' : 'removeClass']('separate');
+    $('#chart_height_md').prop('disabled', !$(this).is(':checked'));
 
     // Set tablet/desktop chart height to match mobile chart height
     // if user chooses not to use different chart heights
