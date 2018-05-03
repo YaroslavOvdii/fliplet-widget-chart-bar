@@ -77,9 +77,13 @@ function validateChartHeight(val) {
     val = val.toString() || '';
   }
 
-  if (!val || parseFloat(val) <= 0) {
-    // Set empty or non-empty values to the default
+  if (!val) {
+    // Set empty values to the default
     val = defaultChartHeight;
+  }
+
+  if (parseFloat(val) <= 0) {
+    val = '0px';
   }
 
   if (/^\d+$/.test(val)) {
