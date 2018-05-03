@@ -1,9 +1,11 @@
-var defaultChartHeight = '400px';
+var defaultChartHeight = {
+  sm: '350px',
+  md: '450px'
+};
 var defaultData = {
   dataSourceQuery: undefined,
-  separateChartHeights: false,
-  chartHeightSm: defaultChartHeight,
-  chartHeightMd: defaultChartHeight,
+  chartHeightSm: defaultChartHeight.sm,
+  chartHeightMd: defaultChartHeight.md,
   showDataLegend: true,
   showDataValues: true,
   yAxisTitle: '',
@@ -72,14 +74,14 @@ var dsQueryProvider = Fliplet.Widget.open('com.fliplet.data-source-query', {
 });
 
 // Ensure chart heights have a correct default & units
-function validateChartHeight(val) {
+function validateChartHeight(val, size) {
   if (typeof val !== 'string') {
     val = val.toString() || '';
   }
 
   if (!val) {
     // Set empty values to the default
-    val = defaultChartHeight;
+    val = defaultChartHeight[size];
   }
 
   if (parseFloat(val) <= 0) {
@@ -96,8 +98,8 @@ function validateChartHeight(val) {
 
 function validateForm() {
   // Validate chart height
-  $('#chart_height_sm').val(validateChartHeight($('#chart_height_sm').val()));
-  $('#chart_height_md').val(validateChartHeight($('#chart_height_md').val()));
+  $('#chart_height_sm').val(validateChartHeight($('#chart_height_sm').val()), 'sm');
+  $('#chart_height_md').val(validateChartHeight($('#chart_height_md').val()), 'md');
 }
 
 function attachObservers() {
@@ -109,7 +111,6 @@ function attachObservers() {
       // dataSourceColumn: $dataColumns.val(),
       dataSourceQuery: result.data,
       dataSortOrder: $dataSortOrder.find(':selected').val(),
-      separateChartHeights: $('#separate_chart_heights').is(':checked'),
       chartHeightSm: $('#chart_height_sm').val(),
       chartHeightMd: $('#chart_height_md').val(),
       showDataLegend: $('#show_data_legend:checked').val() === "show",
@@ -128,31 +129,12 @@ function attachObservers() {
   Fliplet.Widget.onSaveRequest(function () {
     dsQueryProvider.forwardSaveRequest();
   });
-
-  $('#separate_chart_heights').on('change', function () {
-    $('#chart_height_md').prop('disabled', !$(this).is(':checked'));
-
-    // Set tablet/desktop chart height to match mobile chart height
-    // if user chooses not to use different chart heights
-    if (!$(this).is(':checked')) {
-      $('#chart_height_md').val($('#chart_height_sm').val());
-    }
-  });
-
-  // Sync mobile and tablet/desktop chart heights if user
-  // chooses not to use different chart heights
-  $('#chart_height_sm').on('change keyup input', function () {
-    if (!$('#separate_chart_heights').is(':checked')) {
-      $('#chart_height_md').val($('#chart_height_sm').val());
-    }
-  });
 }
 
 attachObservers();
 
 // LOAD CHART SETTINGS
 if (data) {
-  $('#separate_chart_heights').prop('checked', data.separateChartHeights).trigger('change');
   $('#chart_height_sm').val(data.chartHeightSm);
   $('#chart_height_md').val(data.chartHeightMd);
   $('#show_data_legend').prop('checked', data.showDataLegend);
