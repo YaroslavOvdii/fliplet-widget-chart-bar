@@ -1,6 +1,12 @@
 .chart-bar-wrapper .chart-placeholder {
   position: relative;
 }
+
+.chart-bar-wrapper .chart-placeholder .chart-placeholder-text > * {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
 .chart-bar-wrapper .chart-placeholder .chart-container {
   opacity: 0.3;
   pointer-events: none;
