@@ -74,7 +74,7 @@
       }
 
       function refreshData() {
-        if (!data.dataSourceQuery) {
+        if (typeof data.dataSourceQuery !== 'object') {
           data.columns = ['A','B','C'];
           data.values = [3, 1, 2];
           data.totalEntries = 6;
