@@ -26,12 +26,32 @@
         </label>
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-sm-4 control-label">
-        <label for="chart_height">Chart height</label>
+    <div class="chart-heights">
+      <div class="form-group">
+        <div class="col-sm-4 control-label">
+          <label for="chart_height_sm">Chart height <span class="chart-height-mobile-label">(mobile)</span></label>
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="chart_height_sm" name="chart_height_sm" />
+        </div>
       </div>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="chart_height" name="chart_height" />
+      <div class="form-group chart-height-md">
+        <div class="col-sm-4 control-label">
+          <label for="chart_height_md">Chart height (tablet/desktop)</label>
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="chart_height_md" name="chart_height_md" />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-8 col-sm-push-4">
+          <div class="checkbox checkbox-icon">
+            <input type="checkbox" id="separate_chart_heights" name="separate_chart_heights" />
+            <label for="separate_chart_heights">
+              <span class="check"><i class="fa fa-check"></i></span> Use different height for tablet/desktop
+            </label>
+          </div>
+        </div>
       </div>
     </div>
     <div class="form-group">

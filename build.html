@@ -1,6 +1,6 @@
 <div class="chart-bar-wrapper" data-chart-bar-id="{{id}}">
   {{#if dataSourceQuery.dataSourceId}}
-    <div class="chart-container"{{#if chartHeight}} style="height: {{chartHeight}};"{{/if}}></div>
+    <div class="chart-container"></div>
     {{#or showTotalEntries autoRefresh}}
     <div class="container-fluid">
       <div class="row">
@@ -20,7 +20,7 @@
   {{else}}
     <div class="text-center text-muted">
       <div class="chart-placeholder">
-        <div class="chart-container"{{#if chartHeight}} style="height: {{chartHeight}};"{{/if}}></div>
+        <div class="chart-container"></div>
         <div class="chart-placeholder-text">
           <h3>Bar Chart</h3>
           <p>Start configuring your component and the chart will appear here.</p>
@@ -28,4 +28,30 @@
       </div>
     </div>
   {{/if}}
+  {{#and chartHeightSm chartHeightMd}}
+  <style>
+  .chart-bar-wrapper[data-chart-bar-id="{{id}}"] .chart-container {
+    height: {{chartHeightSm}};
+  }
+
+  @media screen and (min-width: 640px) {
+    .chart-bar-wrapper[data-chart-bar-id="{{id}}"] .chart-container {
+      height: {{chartHeightMd}};
+    }
+  }
+  </style>
+  <script type="text/html" class="chart-styles">
+    <style>
+    .chart-bar-wrapper[data-chart-bar-id="{{id}}"] .chart-container {
+      height: {{chartHeightSm}};
+    }
+
+    @media screen and (min-width: 640px) {
+      .chart-bar-wrapper[data-chart-bar-id="{{id}}"] .chart-container {
+        height: {{chartHeightMd}};
+      }
+    }
+    </style>
+  </script>
+  {{/and}}
 </div>

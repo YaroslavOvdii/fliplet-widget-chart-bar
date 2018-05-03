@@ -15,7 +15,6 @@
   transform: translate3d(0, -50%, 0);
 }
 .chart-bar-wrapper .chart-container {
-  min-width: 310px;
   height: 400px;
   margin: 0 auto;
 }

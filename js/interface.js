@@ -1,7 +1,9 @@
 var defaultChartHeight = '400px';
 var defaultData = {
   dataSourceQuery: undefined,
-  chartHeight: defaultChartHeight,
+  separateChartHeights: false,
+  chartHeightSm: defaultChartHeight,
+  chartHeightMd: defaultChartHeight,
   showDataLegend: true,
   showDataValues: true,
   yAxisTitle: '',
@@ -90,38 +92,65 @@ function validateChartHeight(val) {
 
 function validateForm() {
   // Validate chart height
-  $('#chart_height').val(validateChartHeight($('#chart_height').val()));
+  $('#chart_height_sm').val(validateChartHeight($('#chart_height_sm').val()));
+  $('#chart_height_md').val(validateChartHeight($('#chart_height_md').val()));
 }
 
-dsQueryProvider.then(function(result){
-  validateForm();
-  
-  Fliplet.Widget.save({
-    // dataSourceId: parseInt($dataSource.val(), 10),
-    // dataSourceColumn: $dataColumns.val(),
-    dataSourceQuery: result.data,
-    dataSortOrder: $dataSortOrder.find(':selected').val(),
-    chartHeight: $('#chart_height').val(),
-    showDataLegend: $('#show_data_legend:checked').val() === "show",
-    showDataValues: $('#show_data_values:checked').val() === "show",
-    yAxisTitle: $('#y_axis_title').val(),
-    xAxisTitle: $('#x_axis_title').val(),
-    showTotalEntries: $('#show_total_entries:checked').val() === "show",
-    autoRefresh: $('#auto_refresh:checked').val() === "refresh"
-  }).then(function () {
-    Fliplet.Widget.complete();
-    Fliplet.Studio.emit('reload-page-preview');
+function attachObservers() {
+  dsQueryProvider.then(function(result){
+    validateForm();
+    
+    Fliplet.Widget.save({
+      // dataSourceId: parseInt($dataSource.val(), 10),
+      // dataSourceColumn: $dataColumns.val(),
+      dataSourceQuery: result.data,
+      dataSortOrder: $dataSortOrder.find(':selected').val(),
+      separateChartHeights: $('#separate_chart_heights').is(':checked'),
+      chartHeightSm: $('#chart_height_sm').val(),
+      chartHeightMd: $('#chart_height_md').val(),
+      showDataLegend: $('#show_data_legend:checked').val() === "show",
+      showDataValues: $('#show_data_values:checked').val() === "show",
+      yAxisTitle: $('#y_axis_title').val(),
+      xAxisTitle: $('#x_axis_title').val(),
+      showTotalEntries: $('#show_total_entries:checked').val() === "show",
+      autoRefresh: $('#auto_refresh:checked').val() === "refresh"
+    }).then(function () {
+      Fliplet.Widget.complete();
+      Fliplet.Studio.emit('reload-page-preview');
+    });
   });
-});
 
-// Fired from Fliplet Studio when the external save button is clicked
-Fliplet.Widget.onSaveRequest(function () {
-  dsQueryProvider.forwardSaveRequest();
-});
+  // Fired from Fliplet Studio when the external save button is clicked
+  Fliplet.Widget.onSaveRequest(function () {
+    dsQueryProvider.forwardSaveRequest();
+  });
+
+  $('#separate_chart_heights').on('change', function () {
+    $('.chart-heights')[$(this).is(':checked') ? 'addClass' : 'removeClass']('separate');
+
+    // Set tablet/desktop chart height to match mobile chart height
+    // if user chooses not to use different chart heights
+    if (!$(this).is(':checked')) {
+      $('#chart_height_md').val($('#chart_height_sm').val());
+    }
+  });
+
+  // Sync mobile and tablet/desktop chart heights if user
+  // chooses not to use different chart heights
+  $('#chart_height_sm').on('change keyup input', function () {
+    if (!$('#separate_chart_heights').is(':checked')) {
+      $('#chart_height_md').val($('#chart_height_sm').val());
+    }
+  });
+}
+
+attachObservers();
 
 // LOAD CHART SETTINGS
 if (data) {
-  $('#chart_height').val(data.chartHeight);
+  $('#separate_chart_heights').prop('checked', data.separateChartHeights).trigger('change');
+  $('#chart_height_sm').val(data.chartHeightSm);
+  $('#chart_height_md').val(data.chartHeightMd);
   $('#show_data_legend').prop('checked', data.showDataLegend);
   $('#show_data_values').prop('checked', data.showDataValues);
   $('#y_axis_title').val(data.yAxisTitle);

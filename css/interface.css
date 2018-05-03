@@ -16,3 +16,16 @@ body {
   min-height: 24px;
   margin-bottom: 0;
 }
+
+.chart-height-mobile-label,
+.chart-height-md {
+  display: none;
+}
+
+.chart-heights.separate .chart-height-mobile-label {
+  display: inline;
+}
+
+.chart-heights.separate .chart-height-md {
+  display: block;
+}
