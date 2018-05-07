@@ -74,7 +74,7 @@
       }
 
       function refreshData() {
-        if (typeof data.dataSourceQuery !== 'object') {
+        if (typeof data.dataSourceQuery !== 'object' && !data.dataSourceId) {
           data.columns = ['A','B','C'];
           data.values = [3, 1, 2];
           data.totalEntries = 6;
@@ -295,6 +295,8 @@
       }
 
       if (Fliplet.Env.get('interact')) {
+        // TinyMCE removes <style> tags, so we've used a <script> tag instead,
+        // which will be appended to <body> to apply the styles
         $($(this).find('.chart-styles').detach().html()).appendTo('body');
       } else {
         $(this).find('.chart-styles').remove();
