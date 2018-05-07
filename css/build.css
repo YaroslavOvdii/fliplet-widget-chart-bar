@@ -33,10 +33,10 @@
 }
 .chart-bar-wrapper .chart-updatedAt,
 .chart-bar-wrapper .chart-total {
-    text-align: center;
-    color: #c2c2c2;
+  text-align: center;
+  color: #c2c2c2;
 }
 .chart-bar-wrapper .chart-updatedAt > .updatedAt,
 .chart-bar-wrapper .chart-total > .total {
-    color: #888888;
+  color: #888888;
 }
