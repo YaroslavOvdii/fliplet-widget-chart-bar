@@ -1,6 +1,6 @@
 var defaultChartHeight = {
-  sm: '350px',
-  md: '450px'
+  sm: '400px',
+  md: '500px'
 };
 var defaultData = {
   dataSourceQuery: undefined,
