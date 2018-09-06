@@ -261,7 +261,6 @@
           series: [{
             name: data.name,
             data: data.values,
-            color: '#3276b1',
             dataLabels: {
               enabled: data.showDataValues,
               color: '#333333',
