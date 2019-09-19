@@ -116,8 +116,13 @@
                       // Value is an array
                       value.forEach(function(elem) {
                         if (typeof elem === 'string') {
-                          ele = $.trim(elem);
+                          elem = $.trim(elem);
                         }
+
+                        if (!elem) {
+                          return;
+                        }
+
                         data.entries.push(elem);
                         if ( data.columns.indexOf(elem) === -1 ) {
                           data.columns.push(elem);
@@ -131,6 +136,11 @@
                       if (typeof value === 'string') {
                         value = $.trim(value);
                       }
+
+                      if (!value) {
+                        return;
+                      }
+
                       data.entries.push(value);
                       if ( data.columns.indexOf(value) === -1 ) {
                         data.columns.push(value);
