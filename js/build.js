@@ -85,8 +85,8 @@
         return Fliplet.Hooks.run('beforeQueryChart', data.dataSourceQuery).then(function() {
           return Fliplet.Hooks.run('beforeChartQuery', {
             config: data,
-            id: widgetId,
-            uuid: widgetUuid,
+            id: data.id,
+            uuid: data.uuid,
             type: 'bar'
           });
         }).then(function() {
@@ -106,8 +106,8 @@
           return Fliplet.Hooks.run('afterQueryChart', result).then(function () {
             return Fliplet.Hooks.on('afterChartQuery', {
               config: data,
-              id: widgetId,
-              uuid: widgetUuid,
+              id: data.id,
+              uuid: data.uuid,
               type: 'bar',
               records: result
             });
