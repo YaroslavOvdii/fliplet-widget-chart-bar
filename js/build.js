@@ -210,7 +210,7 @@
         // Update values
         chart.series[0].setData(data.values);
         refreshChartInfo();
-        return Promise.resolve();
+        return Promise.resolve(chart);
       }
 
       function getLatestData() {
@@ -271,7 +271,7 @@
                     type: 'bar',
                     config: data
                   });
-                  resolve();
+                  resolve(this);
                 }
               }
             },
