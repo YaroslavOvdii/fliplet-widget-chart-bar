@@ -6,6 +6,8 @@
     Fliplet.Widget.instance('chart-bar', function(data) {
       var chartId = data.id;
       var chartUuid = data.uuid;
+      var inheritColor1 = true;
+      var inheritColor2 = true;
       var $container = $(this);
       var refreshTimeout = 5000;
       var updateDateFormat = 'hh:mm:ss a';
@@ -250,14 +252,54 @@
         });
       }
 
+      function inheritColor(inheritanceColorKey, colorsArray, colorIndex) {
+        var inheritanceColor = Fliplet.Themes.Current.get(inheritanceColorKey);
+
+        if (inheritanceColor) {
+          colorsArray[colorIndex] = inheritanceColor;
+        }
+      }
+
       Fliplet.Studio.onEvent(function(event) {
         var eventDetail = event.detail;
 
         if (eventDetail && eventDetail.type === 'colorChange') {
-          // In the label we got a string with a field label and its numeration
-          // For example: 'Chart color 1'
-          // Numeration of the fields start with 1, that is why we decrease it by 1.
-          var colorIndex = eventDetail.label.match(/[0-9]{1,2}/)[0] - 1;
+          var colorIndex = null;
+
+          switch (eventDetail.label) {
+            case 'Highlight color':
+              if (inheritColor1) {
+                colorIndex = 0;
+              }
+
+              break;
+            case 'Secondary color':
+              if (inheritColor2) {
+                colorIndex = 1;
+              }
+
+              break;
+            case 'Chart color 1':
+              inheritColor1 = false;
+
+              break;
+            case 'Chart color 2':
+              inheritColor2 = false;
+
+              break;
+            default:
+              break;
+          }
+
+          if (colorIndex === null) {
+            var labelIndex = eventDetail.label.match(/[0-9]{1,2}/);
+
+            if (labelIndex === null) {
+              return;
+            }
+
+            colorIndex = labelIndex[0] - 1;
+          }
 
           colors[colorIndex] = eventDetail.color;
 
@@ -281,8 +323,15 @@
               ? customColors.values[colorKey]
               : Fliplet.Themes.Current.get(colorKey);
 
+            // Inherit colors for chartColor1 and chartColor2 from highlightColor and secondaryColor
             if (newColor) {
               colors[index] = newColor;
+              inheritColor1 = colorKey !== 'chartColor1';
+              inheritColor2 = colorKey !== 'chartColor2';
+            } else if (colorKey === 'chartColor1' && inheritColor1) {
+              inheritColor('highlightColor', colors, index);
+            } else if (colorKey === 'chartColor2' && inheritColor2) {
+              inheritColor('secondaryColor', colors, index);
             }
           });
 
