@@ -89,6 +89,7 @@ function attachObservers() {
       dataSortOrder: $dataSortOrder.find(':selected').val(),
       showDataLegend: $('#show_data_legend').is(':checked'),
       showDataValues: $('#show_data_values').is(':checked'),
+      chartName: $('#chart_name').val(),
       yAxisTitle: $('#y_axis_title').val(),
       xAxisTitle: $('#x_axis_title').val(),
       showTotalEntries: $('#show_total_entries').is(':checked'),
@@ -111,6 +112,7 @@ attachObservers();
 if (data) {
   $('#show_data_legend').prop('checked', data.showDataLegend);
   $('#show_data_values').prop('checked', data.showDataValues);
+  $('#chart_name').val(data.chartName);
   $('#y_axis_title').val(data.yAxisTitle);
   $('#x_axis_title').val(data.xAxisTitle);
   $('#show_total_entries').prop('checked', data.showTotalEntries);
