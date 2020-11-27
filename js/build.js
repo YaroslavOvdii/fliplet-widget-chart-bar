@@ -5,7 +5,7 @@
   Fliplet.Chart = Fliplet.Widget.Namespace('chart');
 
   function init() {
-    Fliplet.Widget.instance('chart-bar', function(data) {
+    Fliplet.Widget.instance('chart-bar-1-1-0', function(data) {
       var chartId = data.id;
       var chartUuid = data.uuid;
       var inheritColor1 = true;
